@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>Receipt Experience</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .page-header {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .page-header-title {
+            color: #5a5a5a;
+            font-size: 12px;
+            max-width: 234px;
+            line-height: 1.6;
+            margin: 0;
+            margin-bottom: 5px;
+        }
+        .page-header-subtitle {
+            color: #979797;
+            font-size: 12px;
+            max-width: 234px;
+            line-height: 1.2;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Changed to flex-start for left alignment */
+        }
+        .receipt {
+            background-image: url("/joy/Assets/paper.png"); /* Path to your receipt image */
+            background-size: contain; /* Display the entire image without cropping */
+            background-repeat: no-repeat; /* Prevent image from repeating */
+            background-position: center; /* Centers the image */
+            width: 280px; /* Adjusted width */
+            height: 500px; /* Adjusted height */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            box-sizing: border-box;
+        }
+        .receipt-header {
+            font-family: 'JetBrains Mono', monospace;
+            color: #5a5a5a;
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.6;
+            width: 100%;
+        }
+        .receipt-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: #5a5a5a;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.2;
+            margin: 0px 25px 0px 25px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .receipt-footer {
+            font-family: 'JetBrains Mono', monospace;
+            color: #5a5a5a;
+            text-align: left;
+            font-size: 20px;
+        }
+        .button {
+            font-family: 'JetBrains Mono', monospace;
+            color: #5a5a5a;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline; /* Added underline */
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.3s; /* Changed transition to color */
+            margin-left: 120px; /* Align with the right edge of receipt */
+        }
+        .button:hover {
+            color: #9c9c9c; /* Changed to grey on hover */
+        }
+        .page-footer {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .info-text {
+            color: #5a5a5a;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .info-text:hover {
+            color: #9c9c9c;
+        }
+        .info-box {
+            display: none;
+            position: absolute;
+            bottom: 25px;
+            right: 0;
+            width: 200px;
+            border: 1px solid #5a5a5a;
+            padding: 15px;
+            background-color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #5a5a5a;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+        .info-box div {
+            margin-bottom: 8px;
+        }
+        .info-box div:last-child {
+            margin-bottom: 0;
+        }
+        .page-footer:hover .info-box {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgAudio" autoplay loop muted>
+        <source src="/joy/Assets/nostalgic_amb.mp4" type="audio/mp4">
+    </audio>
+    <div class="page-header">
+        <div class="page-header-title">The simple joys of life.</div>
+        <div class="page-header-subtitle">Notes to myself, written sporadically over three years to help myself remember the beauty in everyday moments.</div>
+    </div>
+    <div class="container">
+        <div class="receipt">
+            <div class="receipt-header">
+                <div id="receiptDate"></div>
+                <div id="receiptTime"></div>
+            </div>
+            <div class="receipt-text" id="receiptContent"></div>
+            <div class="receipt-footer">☼</div>
+        </div>
+        <button class="button" id="generateBtn">tell me another -></button>
+    </div>
+    <div class="page-footer">
+        <div class="info-text">info</div>
+        <div class="info-box">
+            <div>03/08/26 11:32:21</div>
+            <div>I hope this brings you some joy too.</div>
+            <div>liz.xo</div>
+        </div>
+    </div>
+
+    <script>
+        const items = [
+            "love letters for or of friends, family, lovers, and life",
+            "perfectly ripe and sweet fruit",
+            "old cookbooks with ingredient stains",
+            "the wonder of children",
+            "the way people arrange their desk trinkets",
+            "worn in stuffed animals that sit on the bed",
+            "screenshots of old text conversations that made you laugh",
+            "photo albums with old friends",
+            "the sound of wind chimes on a summer porch",
+            "collecting pretty rocks and keeping them on windowsills",
+            "a cat sleeping on a wooden chair under the sunlight",
+            "friendship bracelets that are falling apart but you still wear",
+            "two jets leaving two streams in the sky",
+            "doodles in the margins of class notes from boring lectures",
+            "voice memos you forgot you recorded",
+            "children's artwork magnetted to fridges for years",
+            "amateur poetry typed in the journal app at 2am that you'll never show anyone",
+            "morning dew on leaves in the garden and the smell of the cold",
+            "the feeling of hope at 5am in the morning when the world is still quiet",
+            "the sound of rain on windows while you're safe inside",
+            "walking through an empty college campus late at night in the snow",
+            "2am conversations with a friend that turns philosophical",
+            "the feeling of being so deeply connected to someone",
+            "driving with friends at night with the windows down and singing at the top of your lungs",
+            "sharing one earbud each on a long bus ride",
+            "watching the sunset and the hills roll by as you're sitting on the BART",
+            "watching a horror movie huddled up on the couch with friends",
+            "walking home together after a party, tired, happy, drunk",
+            "laughing so hard together that you can't breathe",
+            "playing Minecraft with your friend until you fall asleep on the same bed",
+            "sitting on the park bench with music in your ears watching the sky"
+        ];
+
+        function formatDate() {
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const year = String(now.getFullYear()).slice(-2);
+            return `${month}/${date}/${year}`;
+        }
+
+        function formatTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        function updateTime() {
+            document.getElementById('receiptTime').textContent = formatTime();
+        }
+
+        function generateReceipt() {
+            const randomIndex = Math.floor(Math.random() * items.length);
+            document.getElementById('receiptContent').textContent = items[randomIndex];
+        }
+
+        // Initialize date and time
+        document.getElementById('receiptDate').textContent = formatDate();
+        updateTime();
+        generateReceipt();
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+
+        document.getElementById('generateBtn').addEventListener('click', generateReceipt);
+
+        // Auto-play audio with user interaction fallback
+        const audio = document.getElementById('bgAudio');
+        audio.muted = false;
+        audio.play().catch(error => {
+            // If autoplay fails, play on first user interaction
+            document.addEventListener('click', () => {
+                audio.play();
+            }, { once: true });
+        });
+    </script>
+</body>
+</html>
